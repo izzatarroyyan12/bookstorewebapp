@@ -1,0 +1,165 @@
+<!-- templates/add_data.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>GoodReading Bookstore Database - Add Data</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .input {
+            border-radius: 10px;
+            outline: 2px solid #fab3ff;
+            border: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: transparent;
+            outline-offset: 3px;
+            padding: 10px 1rem;
+            transition: 0.25s;
+        }
+
+        .input:focus {
+            outline-offset: 5px;
+            background-color: transparent;
+        }
+
+        .container div {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .container div label {
+            display: inline-block;
+            width: 150px;
+            text-align: left;
+        }
+
+        .container div input,
+        .container div select {
+            display: inline-block;
+            width: 200px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">GoodReading Bookstore Database</h1>
+        <a class="link" href="{{ url_for('show_table_data', table_name=table_name) }}">Go back to table data</a>
+        <h2>Add Data to Table: {{ table_name }}</h2>
+        <form action="{{ url_for('insert_data', table_name=table_name) }}" method="POST">
+            {% if table_name == 'book' %}
+                <!-- Columns for the "book" table -->
+                {% set fields = [
+                    {'label': 'Book Number', 'type': 'number', 'name': 'booknumber', 'value': next_book_number, 'required': True, 'readonly': True},
+                    {'label': 'Book Name', 'type': 'text', 'name': 'bookname', 'required': True},
+                    {'label': 'Publication Year', 'type': 'number', 'name': 'publicationyear', 'required': True},
+                    {'label': 'Pages', 'type': 'number', 'name': 'pages', 'required': True},
+                    {'label': 'Category', 'name': 'categoryname', 'options': bookcategories, 'required': True},
+                    {'label': 'Author', 'name': 'authorname', 'options': authors, 'required': True},
+                    {'label': 'Publisher', 'name': 'publishername', 'options': publishers, 'required': True}
+                ] %}
+                {% for field in fields %}
+                    <div>
+                        <label for="{{ field.name }}">{{ field.label }}:</label>
+                        {% if field.type == 'number' %}
+                            <input type="number" id="{{ field.name }}" name="{{ field.name }}" value="{{ field.value }}" {% if field.required %}required{% endif %} {% if field.readonly %}readonly{% endif %} class="input">
+                        {% elif field.type == 'text' %}
+                            <input type="text" id="{{ field.name }}" name="{{ field.name }}" {% if field.required %}required{% endif %} class="input">
+                        {% endif %}
+                        {% if field.options %}
+                            <select id="{{ field.name }}" name="{{ field.name }}" {% if field.required %}required{% endif %} class="input">
+                                {% for option in field.options %}
+                                    <option value="{{ option[1] }}">{{ option[1] }}</option>
+                                {% endfor %}
+                            </select>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% elif table_name == 'staff' %}
+                <!-- Columns for the "staff" table -->
+                {% set fields = [
+                    {'label': 'Staff ID', 'type': 'number', 'name': 'staffid', 'value': next_staff_id, 'required': True, 'readonly': True},
+                    {'label': 'Staff Name', 'type': 'text', 'name': 'staffname', 'required': True},
+                    {'label': 'Date of Birth', 'type': 'date', 'name': 'dateofbirth', 'required': True},
+                    {'label': 'Address Line', 'name': 'addressline', 'options': addresses, 'required': True},
+                    {'label': 'Email', 'type': 'text', 'name': 'email', 'required': True},
+                    {'label': 'Position', 'type': 'text', 'name': 'position', 'required': True},
+                    {'label': 'Salary (in Rupiah)', 'type': 'number', 'name': 'salary', 'required': True}
+                ] %}
+                {% for field in fields %}
+                    <div>
+                        <label for="{{ field.name }}">{{ field.label }}:</label>
+                        {% if field.type == 'number' %}
+                            <input type="number" id="{{ field.name }}" name="{{ field.name }}" value="{{ field.value }}" {% if field.required %}required{% endif %} {% if field.readonly %}readonly{% endif %} class="input">
+                        {% elif field.type == 'text' %}
+                            <input type="text" id="{{ field.name }}" name="{{ field.name }}" {% if field.required %}required{% endif %} class="input">
+                        {% elif field.type == 'date' %}
+                            <input type="date" id="{{ field.name }}" name="{{ field.name }}" {% if field.required %}required{% endif %} class="input">
+                        {% endif %}
+                        {% if field.options %}
+                            <select id="{{ field.name }}" name="{{ field.name }}" {% if field.required %}required{% endif %} class="input">
+                                {% for option in field.options %}
+                                    <option value="{{ option[1] }}">{{ option[1] }}</option>
+                                {% endfor %}
+                            </select>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% elif table_name == 'address' %}
+                <!-- Columns for the "address" table -->
+                {% set fields = [
+                    {'label': 'Address Line', 'type': 'text', 'name': 'addressline', 'required': True},
+                    {'label': 'City', 'type': 'text', 'name': 'city', 'required': True},
+                    {'label': 'Province', 'type': 'text', 'name': 'province', 'required': True},
+                    {'label': 'Postal Code', 'type': 'text', 'name': 'postalcode', 'required': True},
+                    {'label': 'Telephone', 'type': 'text', 'name': 'telephone', 'required': True}
+                ] %}
+                {% for field in fields %}
+                    <div>
+                        <label for="{{ field.name }}">{{ field.label }}:</label>
+                        <input type="{{ field.type }}" id="{{ field.name }}" name="{{ field.name }}" {% if field.required %}required{% endif %} class="input">
+                    </div>
+                {% endfor %}
+            {% elif table_name == 'author' %}
+                <!-- Columns for the "author" table -->
+                {% set fields = [
+                    {'label': 'Author Number', 'type': 'number', 'name': 'authornumber', 'value' : next_author_number, 'required': True, 'readonly': True},
+                    {'label': 'Author Name', 'type': 'text', 'name': 'authorname', 'required': True},
+                    {'label': 'Year Born', 'type': 'number', 'name': 'yearborn', 'required': True},
+                    {'label': 'Year Died', 'type': 'number', 'name': 'yeardied', 'required': False}
+                ] %}
+                {% for field in fields %}
+                    <div>
+                        <label for="{{ field.name }}">{{ field.label }}:</label>
+                        {% if field.type == 'number' %}
+                            <input type="number" id="{{ field.name }}" name="{{ field.name }}" value="{{ field.value }}" {% if field.required %}required{% endif %} {% if field.readonly %}readonly{% endif %} class="input">
+                        {% elif field.type == 'text' %}
+                            <input type="text" id="{{ field.name }}" name="{{ field.name }}" {% if field.required %}required{% endif %} class="input">
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% elif table_name == 'bookcategory' %}
+                <!-- Columns for the "bookcategory" table -->
+                {% set fields = [
+                    {'label': 'Category ID', 'type': 'number', 'name': 'categoryid', 'required': True, 'readonly': True},
+                    {'label': 'Category Name', 'type': 'text', 'name': 'categoryname', 'required': True},
+                    {'label': 'Description', 'type': 'text', 'name': 'description', 'required': True}
+                ] %}
+                {% for field in fields %}
+                    <div>
+                        <label for="{{ field.name }}">{{ field.label }}:</label>
+                        {% if field.type == 'number' %}
+                            <input type="number" id="{{ field.name }}" name="{{ field.name }}" {% if field.required %}required{% endif %} {% if field.readonly %}readonly{% endif %} class="input">
+                        {% elif field.type == 'text' %}
+                            <input type="text" id="{{ field.name }}" name="{{ field.name }}" {% if field.required %}required{% endif %} class="input">
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div>
+                <button class="button" type="submit">Add Data</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

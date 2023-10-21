@@ -1,0 +1,124 @@
+<!-- templates/table_data.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>GoodReading Bookstore Database - {{ table_name }}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .container .table-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .container .table-links a.link {
+            font-family: 'Bitter', serif;
+        } 
+
+        .alert {
+            padding: 20px;
+            color: white;
+        }
+
+        .alert-success {
+            background-color: #4CAF50;
+        }
+    
+        .alert-danger {
+            background-color: #f44336;
+        }
+    
+        .closebtn {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+    
+        .closebtn:hover {
+            color: black;
+        }
+    </style>
+    <script>
+        function showMessage(message, className) {
+            var messageDiv = document.createElement("div");
+            messageDiv.classList.add("alert");
+            messageDiv.classList.add(className);
+            messageDiv.innerHTML = `
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                ${message}
+            `;
+            document.body.appendChild(messageDiv);
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">GoodReading Bookstore Database</h1>
+        <h2>Table : {{ table_name }}</h2>
+        <div class="table-links">
+            <a href="{{ url_for('show_tables') }}"  class="link" >Back to table list</a>
+        </div>
+        {% if table_name in ['book', 'staff', 'address', 'author', 'bookcategory'] %}
+            <div class="button2">
+                <a href="{{ url_for('add_data', table_name=table_name) }}">Insert Data</a>
+            </div>
+        {% endif %}
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <!-- Display column headers -->
+                        {% for column in table_data[0].keys() %}
+                            <th>{{ column }}</th>
+                        {% endfor %}
+                        <th>Action</th>  <!-- New column for Action -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in table_data %}
+                        <tr>
+                            <!-- Display data rows -->
+                            {% for value in row.values() %}
+                                <td>{{ value }}</td>
+                            {% endfor %}
+                            <td>
+                                {% if table_name == 'address' %}
+                                    <form action="{{ url_for('delete_data', table_name=table_name, row_id=row['addressid']) }}" method="POST" style="display: inline;">
+                                        <button class="button2" type="submit">Delete</button>
+                                    </form>
+                                    <form action="{{ url_for('edit_data', table_name=table_name, row_id=row['addressid']) }}" method="GET" style="display: inline;">
+                                        <button class="button2" type="submit">Edit</button>
+                                    </form>
+                                {% elif table_name in ['staff'] %}
+                                    <form action="{{ url_for('delete_data', table_name=table_name, row_id=row['staffid']) }}" method="POST" style="display: inline;">
+                                        <button class="button2" type="submit">Delete</button>
+                                    </form>
+                                {% else %}
+                                    None
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% if success_message %}
+        <script>
+            showMessage("{{ success_message }}", "alert-success");
+        </script>
+    {% endif %}
+    {% if error_message %}
+        <script>
+            showMessage("{{ error_message }}", "alert-danger");
+        </script>
+    {% endif %}
+</body>
+</html>

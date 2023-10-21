@@ -1,0 +1,46 @@
+<!-- templates/table_list.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>GoodReading Bookstore Database - Table List</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">GoodReading Bookstore Database</h1>
+        <a class="link" href="{{ url_for('landing_page') }}">Back to Landing Page</a>
+        <h2>Table List</h2>
+        <table>
+            <thead>
+                <th>Table Name</th>
+                <th>Available Action</th>  <!-- New column for Available Action -->
+            </thead>
+            <tbody>
+                {% for table in tables|sort %}
+                    <tr>
+                        <td>
+                            <a href="/show-table-data/{{ table[0] }}">{{ table[0] }}</a>
+                        </td>
+                        <td>
+                            {% if table[0] == 'book' %}
+                                Insert
+                            {% elif table[0] == 'address' %}
+                                Insert, Delete, Edit
+                            {% elif table[0] == 'staff' %}
+                                Insert, Delete
+                            {% elif table[0] == 'author' %}
+                                Insert
+                            {% elif table[0] == 'bookcategory' %}
+                                Insert
+                            {% else %}
+                                None
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

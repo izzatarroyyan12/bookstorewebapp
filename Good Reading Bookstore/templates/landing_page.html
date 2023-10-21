@@ -1,0 +1,26 @@
+<!-- templates/landing_page.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>GoodReading Bookstore Database</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .footer {
+            font-family: 'Belanosima', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+        </div>
+        <h1 class="title">GoodReading Bookstore Database</h1>
+        <a href="/show-tables" class="link">Show Table List</a>
+        <div class="footer">
+            Created by Izzat Arroyyan
+        </div>
+    </div>
+</body>
+</html>
